@@ -8,8 +8,25 @@
 import SwiftUI
 
 struct CurrencyConverterView: View {
+    @ObservedObject var viewModel = CurrencyConverterViewModel()
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        VStack {
+            Text("1 USD Exchange Rate")
+            ScrollView {
+                LazyVGrid(columns: [GridItem(.adaptive(minimum: 150))], content: {
+                    ForEach(viewModel.listOfCards) { card in
+                        CurrencyItem(card: card)
+                            .onTapGesture {
+                                viewModel.flip(card: card)
+                            }
+                    }
+                })
+            }
+            .onAppear {
+                viewModel.fetchCards()
+            }
+        }
     }
 }
 
